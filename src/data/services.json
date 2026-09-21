@@ -1,0 +1,38 @@
+[
+  {
+    "id": 1,
+    "name": "Entrenamiento Personal",
+    "description": "Sesión individual de entrenamiento adaptada a los objetivos del cliente.",
+    "duration": 60,
+    "price": 30,
+    "category": "Entrenamiento",
+    "available": true
+  },
+  {
+    "id": 2,
+    "name": "Evaluación Física",
+    "description": "Evaluación inicial para conocer el estado físico y establecer objetivos de entrenamiento.",
+    "duration": 45,
+    "price": 20,
+    "category": "Evaluación",
+    "available": true
+  },
+  {
+    "id": 3,
+    "name": "Entrenamiento Funcional",
+    "description": "Sesión enfocada en mejorar fuerza, movilidad, coordinación y resistencia.",
+    "duration": 60,
+    "price": 35,
+    "category": "Entrenamiento",
+    "available": false
+  },
+  {
+    "id": 4,
+    "name": "Plan de Entrenamiento",
+    "description": "Diseño de un plan de entrenamiento personalizado según los objetivos del cliente.",
+    "duration": 30,
+    "price": 25,
+    "category": "Planificación",
+    "available": true
+  }
+]
