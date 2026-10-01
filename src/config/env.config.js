@@ -11,6 +11,6 @@ for (const variable of requiredEnvVariables) {
 }
 
 export const config = {
-  port: process.env.PORT,
+  port: Number(process.env.PORT),
   nodeEnv: process.env.NODE_ENV
 };

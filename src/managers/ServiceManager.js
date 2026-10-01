@@ -5,9 +5,23 @@ class ServiceManager {
     this.services = services;
   }
 
-  getServices() {
-    return this.services;
+  getServices(filters = {}) {
+  let result = this.services;
+
+  if (filters.category) {
+    result = result.filter(
+      (service) => service.category === filters.category
+    );
   }
+
+  if (filters.available !== undefined) {
+    result = result.filter(
+      (service) => service.available === filters.available
+    );
+  }
+
+  return result;
+}
 
   getServiceById(id) {
     return this.services.find((service) => service.id === id) || null;
