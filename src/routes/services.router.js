@@ -36,9 +36,9 @@ router.get("/:sid", (req, res) => {
   res.status(200).json(service);
 });
 
-router.post("/", (req, res) => {
+router.post("/", async (req, res) => {
   try {
-    const newService = serviceManager.addService(req.body);
+    const newService = await serviceManager.addService(req.body);
 
     res.status(201).json(newService);
   } catch (error) {
@@ -48,10 +48,13 @@ router.post("/", (req, res) => {
   }
 });
 
-router.put("/:sid", (req, res) => {
+router.put("/:sid", async (req, res) => {
   const id = Number(req.params.sid);
 
-  const updatedService = serviceManager.updateService(id, req.body);
+  const updatedService = await serviceManager.updateService(
+    id,
+    req.body
+  );
 
   if (!updatedService) {
     return res.status(404).json({
@@ -62,10 +65,10 @@ router.put("/:sid", (req, res) => {
   res.status(200).json(updatedService);
 });
 
-router.delete("/:sid", (req, res) => {
+router.delete("/:sid", async (req, res) => {
   const id = Number(req.params.sid);
 
-  const deletedService = serviceManager.deleteService(id);
+  const deletedService = await serviceManager.deleteService(id);
 
   if (!deletedService) {
     return res.status(404).json({
