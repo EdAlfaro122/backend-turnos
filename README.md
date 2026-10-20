@@ -115,3 +115,23 @@ src/data/bookings.json
 ## Persistencia
 
 La información se guarda utilizando `fs/promises` en archivos JSON, por lo que los datos permanecen almacenados incluso después de reiniciar el servidor.
+
+## Arquitectura del proyecto
+
+El proyecto está organizado en las siguientes capas:
+
+- **Routes:** definen los endpoints y los conectan con sus respectivos controladores.
+- **Controllers:** reciben las solicitudes HTTP, llaman a los managers y envían las respuestas.
+- **Managers:** contienen la lógica de gestión de servicios y reservas, incluyendo la lectura y escritura de los archivos JSON.
+- **Data:** almacena los datos de servicios y reservas en archivos JSON.
+- **Config:** gestiona la configuración del entorno mediante variables de entorno.
+
+### Filtros de servicios
+
+Es posible filtrar los servicios mediante parámetros de consulta:
+
+```http
+GET /api/services?category=Entrenamiento
+GET /api/services?available=true
+GET /api/services?category=Entrenamiento&available=true
+```

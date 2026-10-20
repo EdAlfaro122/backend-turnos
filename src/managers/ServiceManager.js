@@ -1,108 +1,102 @@
-import fs from "fs/promises";
-import services from "../data/services.json" with { type: "json" };
+import ServiceManager from "../managers/ServiceManager.js";
 
-const path = "./src/data/services.json";
+const serviceManager = new ServiceManager();
 
-class ServiceManager {
-  constructor() {
-    this.services = services;
-  }
+export const getServices = (req, res) => {
+  try {
+    const { category, available } = req.query;
 
-  async saveServices() {
-    await fs.writeFile(
-      path,
-      JSON.stringify(this.services, null, 2)
-    );
-  }
+    const filters = {};
 
-  getServices(filters = {}) {
-    let result = this.services;
-
-    if (filters.category) {
-      result = result.filter(
-        (service) => service.category === filters.category
-      );
+    if (category) {
+      filters.category = category;
     }
 
-    if (filters.available !== undefined) {
-      result = result.filter(
-        (service) => service.available === filters.available
-      );
+    if (available !== undefined) {
+      filters.available = available === "true";
     }
 
-    return result;
+    const services = serviceManager.getServices(filters);
+
+    res.status(200).json(services);
+  } catch (error) {
+    res.status(500).json({
+      error: error.message,
+    });
   }
+};
 
-  getServiceById(id) {
-    return this.services.find((service) => service.id === id) || null;
-  }
+export const getServiceById = (req, res) => {
+  try {
+    const id = Number(req.params.sid);
 
-  async addService(serviceData) {
-    const requiredFields = [
-      "name",
-      "description",
-      "duration",
-      "price",
-      "category",
-      "available",
-    ];
-
-    const hasAllFields = requiredFields.every(
-      (field) => serviceData[field] !== undefined
-    );
-
-    if (!hasAllFields) {
-      throw new Error("El servicio está incompleto");
-    }
-
-    const newId =
-      this.services.length > 0
-        ? Math.max(...this.services.map((service) => service.id)) + 1
-        : 1;
-
-    const newService = {
-      ...serviceData,
-      id: newId,
-    };
-
-    this.services.push(newService);
-
-    await this.saveServices();
-
-    return newService;
-  }
-
-  async updateService(id, updatedData) {
-    const service = this.services.find(
-      (service) => service.id === id
-    );
+    const service = serviceManager.getServiceById(id);
 
     if (!service) {
-      return null;
+      return res.status(404).json({
+        error: "Servicio no encontrado",
+      });
     }
 
-    Object.assign(service, updatedData, { id });
-
-    await this.saveServices();
-
-    return service;
+    res.status(200).json(service);
+  } catch (error) {
+    res.status(500).json({
+      error: error.message,
+    });
   }
+};
 
-  async deleteService(id) {
-    const serviceIndex = this.services.findIndex(
-      (service) => service.id === id
+export const createService = async (req, res) => {
+  try {
+    const newService = await serviceManager.addService(req.body);
+
+    res.status(201).json(newService);
+  } catch (error) {
+    res.status(400).json({
+      error: error.message,
+    });
+  }
+};
+
+export const updateService = async (req, res) => {
+  try {
+    const id = Number(req.params.sid);
+
+    const updatedService = await serviceManager.updateService(
+      id,
+      req.body
     );
 
-    if (serviceIndex === -1) {
-      return null;
+    if (!updatedService) {
+      return res.status(404).json({
+        error: "Servicio no encontrado",
+      });
     }
 
-    const deletedService = this.services.splice(serviceIndex, 1)[0];
-
-    await this.saveServices();
-
-    return deletedService;
+    res.status(200).json(updatedService);
+  } catch (error) {
+    res.status(500).json({
+      error: error.message,
+    });
   }
-}
+};
 
-export default ServiceManager;
+export const deleteService = async (req, res) => {
+  try {
+    const id = Number(req.params.sid);
+
+    const deletedService = await serviceManager.deleteService(id);
+
+    if (!deletedService) {
+      return res.status(404).json({
+        error: "Servicio no encontrado",
+      });
+    }
+
+    res.status(200).json(deletedService);
+  } catch (error) {
+    res.status(500).json({
+      error: error.message,
+    });
+  }
+};

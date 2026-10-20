@@ -1,13 +1,11 @@
 import fs from "fs/promises";
 import bookings from "../data/bookings.json" with { type: "json" };
-import services from "../data/services.json" with { type: "json" };
 
 const path = "./src/data/bookings.json";
 
 class BookingManager {
   constructor() {
     this.bookings = bookings;
-    this.services = services;
   }
 
   async saveBookings() {
@@ -59,14 +57,6 @@ class BookingManager {
     if (!booking) {
       return {
         error: "Reserva no encontrada",
-      };
-    }
-
-    const service = this.services.find((service) => service.id === serviceId);
-
-    if (!service) {
-      return {
-        error: "Servicio no encontrado",
       };
     }
 
