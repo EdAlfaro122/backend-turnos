@@ -1,64 +1,47 @@
-import BookingManager from "../managers/BookingManager.js";
-import ServiceManager from "../managers/ServiceManager.js";
+import BookingsService from "../services/bookings.service.js";
 
-const bookingManager = new BookingManager();
-const serviceManager = new ServiceManager();
+const bookingsService = new BookingsService();
 
 export const createBooking = async (req, res) => {
   try {
-    const newBooking = await bookingManager.createBooking(req.body);
-
+    const newBooking = await bookingsService.createBooking(req.body);
     res.status(201).json(newBooking);
   } catch (error) {
-    res.status(400).json({
-      error: error.message,
-    });
+    res.status(400).json({ error: error.message });
   }
 };
 
-export const getBookingById = (req, res) => {
-  const id = Number(req.params.bid);
+export const getBookingById = async (req, res) => {
+  try {
+    const id = Number(req.params.bid);
+    const booking = await bookingsService.getBookingById(id);
 
-  const booking = bookingManager.getBookingById(id);
+    if (!booking) {
+      return res.status(404).json({ error: "Reserva no encontrada" });
+    }
 
-  if (!booking) {
-    return res.status(404).json({
-      error: "Reserva no encontrada",
-    });
+    res.status(200).json(booking);
+  } catch (error) {
+    res.status(500).json({ error: error.message });
   }
-
-  res.status(200).json(booking);
 };
-
 
 export const addServiceToBooking = async (req, res) => {
   try {
     const bookingId = Number(req.params.bid);
     const serviceId = Number(req.params.sid);
 
-    const service = serviceManager.getServiceById(serviceId);
-
-    if (!service) {
-      return res.status(404).json({
-        error: "Servicio no encontrado",
-      });
-    }
-
-    const result = await bookingManager.addServiceToBooking(
+    const result = await bookingsService.addServiceToBooking(
       bookingId,
       serviceId
     );
 
     if (result.error) {
-      return res.status(404).json({
-        error: result.error,
-      });
+      return res.status(404).json({ error: result.error });
     }
 
-    return res.status(200).json(result);
+    res.status(200).json(result);
   } catch (error) {
-    return res.status(500).json({
-      error: "Error al añadir el servicio a la reserva",
-    });
+    res.status(500).json({ error: error.message });
   }
 };
