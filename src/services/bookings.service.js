@@ -50,7 +50,7 @@ class BookingsService {
     const bookingServices = booking.services || [];
 
     const existingService = bookingServices.find(
-      (item) => item.service === serviceId,
+      (item) => item.service.toString() === serviceId.toString(),
     );
 
     if (existingService) {

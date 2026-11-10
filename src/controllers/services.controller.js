@@ -1,6 +1,9 @@
+import mongoose from "mongoose";
 import ServicesService from "../services/services.service.js";
 
 const servicesService = new ServicesService();
+
+const isValidId = (id) => mongoose.isObjectIdOrHexString(id);
 
 export const getServices = async (req, res) => {
   try {
@@ -8,11 +11,13 @@ export const getServices = async (req, res) => {
     const filters = {};
 
     if (category) filters.category = category;
+
     if (available !== undefined) {
       filters.available = available === "true";
     }
 
     const services = await servicesService.getServices(filters);
+
     res.status(200).json(services);
   } catch (error) {
     res.status(500).json({ error: error.message });
@@ -21,7 +26,12 @@ export const getServices = async (req, res) => {
 
 export const getServiceById = async (req, res) => {
   try {
-    const id = Number(req.params.sid);
+    const id = req.params.sid;
+
+    if (!isValidId(id)) {
+      return res.status(400).json({ error: "ID de servicio inválido" });
+    }
+
     const service = await servicesService.getServiceById(id);
 
     if (!service) {
@@ -37,6 +47,7 @@ export const getServiceById = async (req, res) => {
 export const createService = async (req, res) => {
   try {
     const newService = await servicesService.createService(req.body);
+
     res.status(201).json(newService);
   } catch (error) {
     res.status(400).json({ error: error.message });
@@ -45,7 +56,12 @@ export const createService = async (req, res) => {
 
 export const updateService = async (req, res) => {
   try {
-    const id = Number(req.params.sid);
+    const id = req.params.sid;
+
+    if (!isValidId(id)) {
+      return res.status(400).json({ error: "ID de servicio inválido" });
+    }
+
     const updatedService = await servicesService.updateService(id, req.body);
 
     if (!updatedService) {
@@ -60,7 +76,12 @@ export const updateService = async (req, res) => {
 
 export const deleteService = async (req, res) => {
   try {
-    const id = Number(req.params.sid);
+    const id = req.params.sid;
+
+    if (!isValidId(id)) {
+      return res.status(400).json({ error: "ID de servicio inválido" });
+    }
+
     const deletedService = await servicesService.deleteService(id);
 
     if (!deletedService) {

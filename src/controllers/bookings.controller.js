@@ -1,10 +1,14 @@
+import mongoose from "mongoose";
 import BookingsService from "../services/bookings.service.js";
 
 const bookingsService = new BookingsService();
 
+const isValidId = (id) => mongoose.isObjectIdOrHexString(id);
+
 export const createBooking = async (req, res) => {
   try {
     const newBooking = await bookingsService.createBooking(req.body);
+
     res.status(201).json(newBooking);
   } catch (error) {
     res.status(400).json({ error: error.message });
@@ -13,7 +17,12 @@ export const createBooking = async (req, res) => {
 
 export const getBookingById = async (req, res) => {
   try {
-    const id = Number(req.params.bid);
+    const id = req.params.bid;
+
+    if (!isValidId(id)) {
+      return res.status(400).json({ error: "ID de reserva inválido" });
+    }
+
     const booking = await bookingsService.getBookingById(id);
 
     if (!booking) {
@@ -28,12 +37,18 @@ export const getBookingById = async (req, res) => {
 
 export const addServiceToBooking = async (req, res) => {
   try {
-    const bookingId = Number(req.params.bid);
-    const serviceId = Number(req.params.sid);
+    const bookingId = req.params.bid;
+    const serviceId = req.params.sid;
+
+    if (!isValidId(bookingId) || !isValidId(serviceId)) {
+      return res
+        .status(400)
+        .json({ error: "ID de reserva o servicio inválido" });
+    }
 
     const result = await bookingsService.addServiceToBooking(
       bookingId,
-      serviceId
+      serviceId,
     );
 
     if (result.error) {

@@ -1,66 +1,43 @@
-import fs from "fs/promises";
-import path from "path";
-import { fileURLToPath } from "url";
+import Booking from "../models/booking.model.js";
 
-const __filename = fileURLToPath(import.meta.url);
-const __dirname = path.dirname(__filename);
+const formatBooking = (booking) => {
+  if (!booking) {
+    return null;
+  }
 
-const dataPath = path.join(__dirname, "../data/bookings.json");
+  const formattedBooking = booking.toObject({ virtuals: true });
+
+  delete formattedBooking.__v;
+
+  return formattedBooking;
+};
 
 class BookingsDAO {
   async create(bookingData) {
-    const bookings = await this.getAll();
+    const newBooking = await Booking.create(bookingData);
 
-    const newId =
-      bookings.length > 0
-        ? Math.max(...bookings.map((booking) => booking.id)) + 1
-        : 1;
-
-    const newBooking = {
-      ...bookingData,
-      id: newId,
-    };
-
-    bookings.push(newBooking);
-
-    await this.saveAll(bookings);
-
-    return newBooking;
+    return formatBooking(newBooking);
   }
 
   async getById(id) {
-    const bookings = await this.getAll();
+    const booking = await Booking.findById(id);
 
-    return bookings.find((booking) => booking.id === id) || null;
+    return formatBooking(booking);
   }
 
   async update(id, updatedData) {
-    const bookings = await this.getAll();
+    const updatedBooking = await Booking.findByIdAndUpdate(id, updatedData, {
+      new: true,
+      runValidators: true,
+    });
 
-    const index = bookings.findIndex((booking) => booking.id === id);
-
-    if (index === -1) {
-      return null;
-    }
-
-    bookings[index] = {
-      ...bookings[index],
-      ...updatedData,
-      id,
-    };
-
-    await this.saveAll(bookings);
-
-    return bookings[index];
+    return formatBooking(updatedBooking);
   }
 
   async getAll() {
-    const data = await fs.readFile(dataPath, "utf-8");
-    return JSON.parse(data);
-  }
+    const bookings = await Booking.find();
 
-  async saveAll(bookings) {
-    await fs.writeFile(dataPath, JSON.stringify(bookings, null, 2));
+    return bookings.map(formatBooking);
   }
 }
 
