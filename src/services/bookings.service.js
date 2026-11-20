@@ -30,6 +30,10 @@ class BookingsService {
     });
   }
 
+  async getBookings() {
+    return this.bookingsRepository.getAll();
+  }
+
   async getBookingById(id) {
     return await this.bookingsRepository.getById(id);
   }

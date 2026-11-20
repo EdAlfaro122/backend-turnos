@@ -103,3 +103,18 @@ El proyecto cuenta con tres modelos de Mongoose:
 Las credenciales de conexión se almacenan en `.env`, archivo excluido del repositorio mediante `.gitignore`.
 
 El repositorio incluye `.env.example` como referencia para configurar las variables de entorno.
+
+## Vistas y actualización en tiempo real
+
+- `/views/services` muestra los servicios guardados en MongoDB.
+- `/views/bookings` muestra la fecha, hora y estado de las reservas.
+- Al crear, actualizar o eliminar un servicio mediante la API, Socket.io actualiza el listado en los navegadores conectados.
+
+Para comprobarlo, abre `http://localhost:8080/views/services` en dos pestañas y crea un servicio en tu base de pruebas:
+
+```bash
+curl -X POST http://localhost:8080/api/services -H 'Content-Type: application/json' -d '{"name":"Consulta de prueba","description":"Servicio para verificar la vista","duration":30,"price":25,"category":"Consultas","available":true}'
+```
+
+La API responde con HTTP 201 y el servicio aparece en ambas pestañas sin recargar.
+Puedes eliminar el registro con `DELETE /api/services/:sid` usando el ID de la respuesta.

@@ -1,0 +1,23 @@
+<h1>Reservas</h1>
+{{#if bookings}}
+  <table>
+    <thead>
+      <tr>
+        <th scope="col">Fecha</th>
+        <th scope="col">Hora</th>
+        <th scope="col">Estado</th>
+      </tr>
+    </thead>
+    <tbody>
+      {{#each bookings}}
+        <tr>
+          <td>{{date}}</td>
+          <td>{{time}}</td>
+          <td>{{status}}</td>
+        </tr>
+      {{/each}}
+    </tbody>
+  </table>
+{{else}}
+  <p>No hay reservas registradas.</p>
+{{/if}}

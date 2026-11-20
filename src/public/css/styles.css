@@ -1,0 +1,79 @@
+:root {
+  font-family: system-ui, sans-serif;
+  color: #172b27;
+  background: #f4f7f5;
+}
+
+body {
+  margin: 0;
+}
+
+header {
+  background: #173f36;
+}
+
+nav, main {
+  max-width: 64rem;
+  margin-inline: auto;
+  padding: 1rem;
+}
+
+nav {
+  display: flex;
+  gap: 1.5rem;
+}
+
+nav a {
+  color: white;
+}
+
+#services-list {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(min(100%, 16rem), 1fr));
+  gap: 1rem;
+}
+
+article, table {
+  background: white;
+  border: 1px solid #cfdcd4;
+  border-radius: 0.5rem;
+}
+
+article {
+  padding: 1rem;
+  overflow-wrap: anywhere;
+}
+
+h2 {
+  margin-top: 0;
+}
+
+dl {
+  display: grid;
+  grid-template-columns: auto 1fr;
+  gap: 0.5rem 1rem;
+  margin-bottom: 0;
+}
+
+dt, th {
+  font-weight: 600;
+}
+
+dd {
+  margin: 0;
+}
+
+table {
+  width: 100%;
+  border-spacing: 0;
+  text-align: left;
+}
+
+th, td {
+  padding: 0.75rem;
+  border-bottom: 1px solid #cfdcd4;
+}
+
+tbody tr:last-child td {
+  border-bottom: 0;
+}

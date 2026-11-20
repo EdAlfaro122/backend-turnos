@@ -48,6 +48,7 @@ export const createService = async (req, res) => {
   try {
     const newService = await servicesService.createService(req.body);
 
+    req.app.get("io")?.emit("services:changed");
     res.status(201).json(newService);
   } catch (error) {
     res.status(400).json({ error: error.message });
@@ -68,6 +69,7 @@ export const updateService = async (req, res) => {
       return res.status(404).json({ error: "Servicio no encontrado" });
     }
 
+    req.app.get("io")?.emit("services:changed");
     res.status(200).json(updatedService);
   } catch (error) {
     res.status(500).json({ error: error.message });
@@ -88,6 +90,7 @@ export const deleteService = async (req, res) => {
       return res.status(404).json({ error: "Servicio no encontrado" });
     }
 
+    req.app.get("io")?.emit("services:changed");
     res.status(200).json(deletedService);
   } catch (error) {
     res.status(500).json({ error: error.message });

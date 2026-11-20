@@ -1,0 +1,18 @@
+<h1>Servicios</h1>
+<p id="services-status" role="status"></p>
+<section id="services-list" aria-label="Listado de servicios">
+  {{#each services}}
+    <article>
+      <h2>{{name}}</h2>
+      <p>{{description}}</p>
+      <dl>
+        <dt>Duración</dt><dd>{{duration}} min</dd>
+        <dt>Precio</dt><dd>{{price}}</dd>
+        <dt>Categoría</dt><dd>{{category}}</dd>
+        <dt>Disponibilidad</dt><dd>{{#if available}}Disponible{{else}}No disponible{{/if}}</dd>
+      </dl>
+    </article>
+  {{else}}
+    <p>No hay servicios registrados.</p>
+  {{/each}}
+</section>
